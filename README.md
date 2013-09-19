@@ -180,6 +180,17 @@ scaleReport.py
  - queries the database to determine how many scales exist in the database and creates ````<div> ```` sections for each one
 
  
+ Running / Using
+ -----
+ 
+ - do the setup steps above (probably have to make the scripts executable)
+ - put index.php in your web server document root
+ - put sendReading in the web server's cgi-bin folder (or change the code in index.php to point to the correct place)
+ - run getscaleinfo.py which will populate the scales table 
+ - run monitorScale.py which will send readings into the readings table
+ - load index.php in a web browser
+
+ 
 TODO
 --
  - not run as root!
@@ -203,7 +214,6 @@ TODO
   - add user interface where users can sign up to receive alerts.
  - web display
   - more interactivity
-
 
 update
 02/8/2013

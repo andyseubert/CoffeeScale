@@ -120,6 +120,7 @@ while 1:
 								print "push end"
 								## here you might calculate the amount removed by the push if you knew the reading before the push started...
 								print "removed "+str(prepush - readval)+" g"
+								## here is also where you would send the amount removed to the database...
 														
 					else:
 						if debug: print "reading unchanged"
