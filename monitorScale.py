@@ -109,7 +109,7 @@ while 1:
 								sendReading(id,readval)							
 							readmillis = int(round(time.time() * 1000))
 						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
-						if delta > 800 :
+						if delta > 800 and delta < 4000 :
 							# see if it's a positive or negative change
 							if ( readval > lastreading[id]):
 								# push started
