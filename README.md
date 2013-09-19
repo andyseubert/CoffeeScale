@@ -2,6 +2,9 @@ CoffeeScale
 ===========
 
 Read a USB scale with RaspBerryPi store the data in a database and display coffee status. 
+
+Thanks to : http://steventsnyder.com/reading-a-dymo-usb-scale-using-python/
+ for providing the starting point and the scale reading code
  
 Requirements / Setup Commands
 -----
