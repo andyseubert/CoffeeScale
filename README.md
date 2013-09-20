@@ -24,6 +24,9 @@ sudo apt-get install  phpmyadmin
 sudo apt-get -y install ssh python apache2 libusb-1.0 mysql-server python-mysqldb php5 php5-mysql phpmyadmin
 want arrays in python? use numpy
 apt-get install -y python-numpy
+apt-get install python-setuptools
+easy_install pip
+pip install twython
 ````
 
  - PYUSB

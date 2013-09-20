@@ -10,9 +10,9 @@ print "Content-type: text/html\n\n"
 debug = 1 
 con = None
 ## should probably get these from the database..
-full = float(1700)
-empty = float(10) # AKA "tare"
-contents = "stuff"
+full = float(4250)
+empty = float(2240) # AKA "tare" - between 2244 and 2250 seems to be the tare for the air pots
+contents = "\"coffee\""
 try:
 	## connect to the database
 	con = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');

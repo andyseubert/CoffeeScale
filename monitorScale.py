@@ -13,6 +13,7 @@ debug = 0
 interface = 0
 pushing = None
 firstrun=1
+readmillis = 0
 # twitter note
 # andy@collegenet.com
 # CNtwitterCoffee16
@@ -35,7 +36,7 @@ VENDOR_ID = 0x0922
 PRODUCT_ID = 0x8004
 DATA_MODE_GRAMS = 2
 DATA_MODE_OUNCES = 11
-
+	
 # find the USB Dymo scale devices
 devices = usb.core.find(find_all=True, idVendor=VENDOR_ID)
 		
