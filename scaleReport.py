@@ -10,7 +10,7 @@ print "Content-type: text/html\n\n"
 debug = 1 
 con = None
 ## should probably get these from the database..
-full = float(4250)
+full = float(5622)
 empty = float(2240) # AKA "tare" - between 2244 and 2250 seems to be the tare for the air pots
 contents = "\"coffee\""
 try:
@@ -25,17 +25,16 @@ try:
 	scalerows = cur.fetchall()
 	serialnos={}
 	for scale in scalerows:
-		serialnos[scale["serialno"]]=scale["id"] 
-
+		serialnos[scale["serialno"]]=scale["id"] 		
 	for s,i in serialnos.items():		
 		serialno=str(s)
 		scale_id=str(i)
 		## put the readings into columns
 		if int(scale_id) & 1: 
-			print "<div id=\"left\" >\n"
-		else:
 			print "<div id=\"right\" >\n"
-			
+		else:
+			print "<div id=\"left\" >\n"
+		#print scale_name + "\n<br/>"
 		print "scale id "+ scale_id+" serial: "+ serialno + "\n<br/>"#named: " + scale_name + "\n<br/>"
 		# get most recently added reading
 		if not cur.execute("select * from readings where reading_time = (select MAX(reading_time) from readings where scale_id = '"+scale_id+"' )"):
@@ -62,10 +61,10 @@ try:
 			pctpx = 0
 		else:
 			print "I read " + str(lastreading-empty) +"g of "+ contents +"<br />\n"
-			pctfull = (((lastreading-empty) / full)*100)
-			#pctfull = round((((lastreading - empty) / full)*100),2)
+			#pctfull = (((lastreading-empty) / full)*100)
+			pctfull = round((((lastreading-empty) / (full-empty))*100),2)
 			print str(pctfull)+"% full<br />\n"
-			pctpx = int(500 * ((lastreading - empty) / full))
+			pctpx = int(500 * ((lastreading-empty) / (full-empty)))
 		print """
 			<div class="graph">
 				<div>

@@ -61,7 +61,7 @@ $(function() {
 	margin: 7px;
 	display: inline-block;
 	position: relative;
-	background-color: #755A42;
+	background-color: #3B1E00;
 	vertical-align: baseline;
 }
 .barholder {
@@ -74,7 +74,7 @@ $(function() {
 
 <body>
 
-<h1>TEST SCALE READINGS REAL TIME</h1>
+<h1>16th Floor Coffee status</h1>
 <div id="content">
 	<div id="status">
 	</div>

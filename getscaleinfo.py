@@ -34,6 +34,10 @@ for device in devices:
 	serialno = str(usb.util.get_string(device,256,3))
 	manufacturer = str(usb.util.get_string(device,256,1))
 	description = str(usb.util.get_string(device,256,2))
+	if debug:
+		print serialno
+		print manufacturer
+		print description
 # look for serialnumber already existing
 	cur.execute("select * from scales where serialno="+serialno)	 
 # this should produce ONE row but in case it does not I'll refer to the rows by their numeric index
