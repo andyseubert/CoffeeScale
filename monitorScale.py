@@ -103,14 +103,15 @@ while 1:
 						# determine the magnitude of the change here
 						delta = abs(readval - float(lastreading[id]))
 						# a small change of a few grams should not be noted
-						if delta > 5 or (int(round(time.time() * 1000)) - readmillis) > 5: 
-							# update it by sending the serial and weight to another program and not waiting for it to return..
+						if delta > 5: #or (int(round(time.time() * 1000)) - readmillis) > 5: 
 							if (readval != float(lastreading[id])):
+								print "delta: " + str(delta)
 								print serialno+" reading changed from "+str(lastreading[id])+" to "+str(readval)
 								sendReading(id,readval)							
 							readmillis = int(round(time.time() * 1000))
 						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
-						if delta > 800 and delta < 6000 :
+						if 800 < delta < 6000 :
+							print "delta: " + str(delta)
 							# see if it's a positive or negative change
 							if ( readval > lastreading[id]):
 								# push started
