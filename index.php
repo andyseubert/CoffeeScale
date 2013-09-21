@@ -7,7 +7,7 @@
  
 function getStatus() { 
     $('div#status').load('/cgi-bin/scaleReport.py');
-    setTimeout("getStatus()",500); 
+    setTimeout("getStatus()",5000); 
 }
 
  
