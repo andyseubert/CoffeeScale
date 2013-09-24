@@ -106,7 +106,7 @@ while 1:
 						if 10 < int(delta) < 6000 : #or (int(round(time.time() * 1000)) - readmillis) > 5: 
 							if (readval != float(lastreading[id])):
 								print "delta: " + str(delta) + " not ignoring"
-								print serialno+" reading changed from "+str(lastreading[id])+" to "+str(readval)
+								print id+" reading changed from "+str(lastreading[id])+" to "+str(readval)
 								sendReading(id,readval)							
 							readmillis = int(round(time.time() * 1000))
 						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
