@@ -3,7 +3,7 @@ import usb.core
 import usb.util
 import os
 import sys
-import MySQLdb as mdb
+import sqlite3 as lite
 from time import localtime, strftime
 
 VENDOR_ID = 0x0922 # dymo vendor
@@ -14,8 +14,8 @@ DATA_MODE_OUNCES = 11
 # connect to database
 con = None
 debug = 1
-con = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');
-cur = con.cursor(mdb.cursors.DictCursor)
+con = lite.connect('c16')
+cur=con.cursor()
 
 # find the USB Dymo scale devices
 #device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -25,7 +25,7 @@ sys.stdout.write('There are ' + str(len(devices)) + ' scales connected!\n')
 scales=[]
 i=1
 for device in devices:
-	scalename="scale "+str(i)
+	scalename="ChangeMyName "+str(i)
 	print "scale #" + str(i)
 	devbus = str(device.bus)
 	devaddr = str(device.address)
@@ -39,10 +39,11 @@ for device in devices:
 		print manufacturer
 		print description
 # look for serialnumber already existing
-	cur.execute("select * from scales where serialno="+serialno)	 
+	cur.execute("select count(*) from scales where serialno='"+serialno+"'")	 
 # this should produce ONE row but in case it does not I'll refer to the rows by their numeric index
-	rows = cur.fetchall() # fetchall so we can refer to the columns by name
-	if cur.rowcount>0:
+	row = cur.fetchone()[0] # fetchall so we can refer to the columns by name
+	if row >=1 :
+		print "row:" + str(row)
 		print "serial "+serialno+" already exists in database"
 	else:
 		sql = "insert into scales(scale_name,vendor_id,product_id,data_mode_grams,data_mode_ounces,serialno) values ('%s', '%s', '%s', '%s', '%s', '%s')"%(scalename,str(VENDOR_ID),productid,str(DATA_MODE_GRAMS),str(DATA_MODE_OUNCES),serialno)

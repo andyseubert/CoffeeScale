@@ -3,7 +3,7 @@ import os
 import sys
 import time
 from sendReading import *
-import MySQLdb as mdb
+import sqlite3 as lite
 from time import localtime, strftime
 import os.path
 import usb.core
@@ -19,18 +19,21 @@ readmillis = 0
 # CNtwitterCoffee16
 # @cnCoffeePoton16
 ## connect to the database
-con = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');
-cur = con.cursor(mdb.cursors.DictCursor)
+con = lite.connect('c16')
+con.text_factory = str
+cur=con.cursor()
+
 #get the scale serial numbers and ids from the database
-cur.execute("select id,serialno from scales")
+cur.execute("select id, serialno from scales")
 scalerows = cur.fetchall()
 serialnos={}
 lastreading={}
-for scale in scalerows:
-	serialnos[scale["serialno"]]=scale["id"] 
-	lastreading[str(scale["id"])] = 0
 
-cur.close()
+for scale in scalerows:
+	serialnos[scale[0]]=scale[1] 
+	lastreading[int(scale[0])] = 0
+
+con.close()
 
 VENDOR_ID = 0x0922
 PRODUCT_ID = 0x8004
@@ -41,10 +44,12 @@ DATA_MODE_OUNCES = 11
 devices = usb.core.find(find_all=True, idVendor=VENDOR_ID)
 		
 while 1:
-	for s, i in serialnos.items():		
+	for i, s in serialnos.items():		
 		serialno=str(s)
 		id=str(i)
-		if debug: print
+		if debug: 
+			print "\nscale serial:"+serialno+" is id "+id
+			print "last reading: "+str(lastreading[i])
 		time.sleep(.5) # please only one reading per second
 		## read the live scale value
 ## read loop
@@ -97,26 +102,26 @@ while 1:
 					if debug: print "current time   : "+strftime("%Y-%m-%d %H:%M:%S", localtime())
 					
 					## compare the cached value with the current value
-					if (readval != float(lastreading[id])) or (int(round(time.time() * 1000)) - readmillis) > 5:
+					if (readval != float(lastreading[i])) or (int(round(time.time() * 1000)) - readmillis) > 5:
 						## if different then update the database and update the cache
 						
 						# determine the magnitude of the change here
-						delta = abs(readval - float(lastreading[id]))
+						delta = abs(readval - float(lastreading[i]))
 						# a small change of a few grams should not be noted
 						if 10 < int(delta) < 6000 : #or (int(round(time.time() * 1000)) - readmillis) > 5: 
-							if (readval != float(lastreading[id])):
+							if (readval != float(lastreading[i])):
 								print "delta: " + str(delta) + " not ignoring"
-								print id+" reading changed from "+str(lastreading[id])+" to "+str(readval)
+								print id+" reading changed from "+str(lastreading[i])+" to "+str(readval)
 								sendReading(id,readval)							
 							readmillis = int(round(time.time() * 1000))
 						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
 						if 800 < int(delta) < 6000 :
 							print "delta > 800 : " + str(delta) + " not ignoring"
 							# see if it's a positive or negative change
-							if ( readval > lastreading[id]):
+							if ( readval > lastreading[i]):
 								# push started
 								print "push start"
-								prepush=lastreading[id]
+								prepush=lastreading[i]
 							else:
 								#push ended
 								print "push end"
@@ -127,7 +132,7 @@ while 1:
 					else:
 						if debug: print "reading unchanged"
 					## set the last read value to the current read value 
-					lastreading[id] = readval
+					lastreading[i] = readval
 			except usb.core.USBError as e:
 				print "usb core error:"
 				print e

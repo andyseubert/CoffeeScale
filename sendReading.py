@@ -2,7 +2,7 @@
 import os
 import sys
 import time
-import MySQLdb as mdb
+import sqlite3 as lite
 from time import localtime, strftime
 import os.path
 import argparse
@@ -13,8 +13,8 @@ debug = None
 
 def sendReading(id,weight):
 	## connect to the database
-	con = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');
-	cur = con.cursor(mdb.cursors.DictCursor)
+	con = lite.connect('c16')
+	cur=con.cursor()
 
 	#time of insert:
 	rightnow=str(strftime('%Y-%m-%d %H:%M:%S', localtime()))
