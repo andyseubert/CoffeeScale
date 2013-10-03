@@ -130,7 +130,7 @@ while 1:
 								## here you might calculate the amount removed by the push if you knew the reading before the push started...
 								if debug: print "removed "+str(prepush - readval)+" g"
 								if prepush - readval < 1000:
-									msg = "someone removed "+str(prepush - readval)+" g from "+scale_name
+									msg = "someone removed "+str(prepush - readval)+" g from "+id
 									subprocess.call(["/usr/local/CoffeeScale/tweet.py",msg])
 									## here is also where you would send the amount removed to the database...
 														
