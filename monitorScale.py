@@ -7,6 +7,7 @@ import sqlite3 as lite
 from time import localtime, strftime
 import os.path
 import usb.core
+import subprocess
 
 con = None
 debug = 0
@@ -51,6 +52,7 @@ while 1:
 			print "\nscale serial:"+serialno+" is id "+id
 			print "last reading: "+str(lastreading[i])
 		time.sleep(.5) # please only one reading per second
+		subprocess.call(["/usr/local/CoffeeScale/events.py"])
 		## read the live scale value
 ## read loop
 		for device in devices:	
@@ -110,24 +112,27 @@ while 1:
 						# a small change of a few grams should not be noted
 						if 10 < int(delta) < 6000 : #or (int(round(time.time() * 1000)) - readmillis) > 5: 
 							if (readval != float(lastreading[i])):
-								print "delta: " + str(delta) + " not ignoring"
-								print id+" reading changed from "+str(lastreading[i])+" to "+str(readval)
+								if debug: print "delta: " + str(delta) + " not ignoring"
+								print "scale "+id+" reading changed from "+str(lastreading[i])+" to "+str(readval)
 								sendReading(id,readval)							
 							readmillis = int(round(time.time() * 1000))
 						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
 						if 800 < int(delta) < 6000 :
-							print "delta > 800 : " + str(delta) + " not ignoring"
+							if debug: print "delta > 800 : " + str(delta) + " not ignoring"
 							# see if it's a positive or negative change
 							if ( readval > lastreading[i]):
 								# push started
-								print "push start"
+								if debug: print "push start"
 								prepush=lastreading[i]
 							else:
 								#push ended
-								print "push end"
+								if debug: print "push end"
 								## here you might calculate the amount removed by the push if you knew the reading before the push started...
-								print "removed "+str(prepush - readval)+" g"
-								## here is also where you would send the amount removed to the database...
+								if debug: print "removed "+str(prepush - readval)+" g"
+								if prepush - readval < 1000:
+									msg = "someone removed "+str(prepush - readval)+" g from "+scale_name
+									subprocess.call(["/usr/local/CoffeeScale/tweet.py",msg])
+									## here is also where you would send the amount removed to the database...
 														
 					else:
 						if debug: print "reading unchanged"
