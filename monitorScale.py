@@ -51,7 +51,7 @@ while 1:
 		if debug: 
 			print "\nscale serial:"+serialno+" is id "+id
 			print "last reading: "+str(lastreading[i])
-		time.sleep(.5) # please only one reading per second
+		time.sleep(.5) # please only one reading per second 
 		subprocess.call(["/usr/local/CoffeeScale/events.py"])
 		## read the live scale value
 ## read loop
