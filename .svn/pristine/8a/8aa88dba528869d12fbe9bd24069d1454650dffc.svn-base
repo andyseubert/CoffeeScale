@@ -1,0 +1,42 @@
+#!/usr/bin/python
+import os
+import sys
+import time
+from readscale import *
+import MySQLdb as mdb
+from time import localtime, strftime
+import os.path
+import argparse
+
+
+con = None
+debug = 1
+
+## check input - we should expect a serial number and a weight
+parser = argparse.ArgumentParser(description="record weight for a given scale in the database")
+parser.add_argument('-s','--serial', help='provide a serial number', required=True)
+parser.add_argument('-w','--weight', help='provide a weight in grams', required=True)
+
+args = vars(parser.parse_args())
+
+
+serialno=args['serial']
+weight=args['weight']
+if debug: print
+if debug: print "scale serial: "+serialno
+
+
+## connect to the database
+con = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');
+cur = con.cursor(mdb.cursors.DictCursor)
+
+#time of insert:
+rightnow=str(strftime('%Y-%m-%d %H:%M:%S', localtime()))
+if debug: print "rightnow: " + rightnow 
+
+sql = "insert into readings(reading_time,reading_value,reading_units,scale_id) values ('%s', '%s', '%s', '%s')"%(rightnow,weight,"g",serialno)
+cur.execute (sql)
+con.commit()
+if debug: print "insert into readings(reading_time,reading_value,reading_units,scale_id) values ('%s', '%s', '%s', '%s')"%(rightnow,weight,"g",serialno)
+
+

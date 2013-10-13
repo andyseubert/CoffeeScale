@@ -1,0 +1,65 @@
+#!/usr/bin/python
+import os
+import sys
+import time
+from readscale import *
+from sendReading import *
+import MySQLdb as mdb
+from time import localtime, strftime
+import os.path
+#import numpy
+
+
+
+con = None
+debug = 1
+
+## connect to the database
+con = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');
+cur = con.cursor(mdb.cursors.DictCursor)
+# get scale info from the database
+# how many scales are there? 
+
+#for each scale, get its reading and add it to the database
+cur.execute("select id,serialno from scales")
+scalerows = cur.fetchall()
+serialnos={}
+weights={}
+for scale in scalerows:
+	serialnos[scale["serialno"]]=scale["id"] 
+	weights[scale["id"]=0]
+cur.close()
+
+while 1:
+	for s, i in serialnos.items():		
+		serialno=str(s)
+		id=str(i)
+		if debug: print
+		if debug: print "scale id:" + id + " serial: "+ serialno
+		## time.sleep(.5) # please only one reading per second
+		## read the live scale value
+		reading = readScale(serialno)
+		if debug: print "raw reading '" + reading +"'"
+		readval = float(reading.split(" ")[0])
+		readunit = reading.split(" ")[1]
+		## if the units are ounces ("oz") then convert to "g"
+		if readunit == "oz" and readval !=0:
+			readval = readval*28.3495
+			if debug: print "converted oz to g"
+		if debug: print "current weight : '" + str(readval) +"' "+readunit
+		if debug: print "current time   : "+strftime("%Y-%m-%d %H:%M:%S", localtime())
+		
+		## compare the cached value with the current value
+		if readval != float(weights[id]):
+			## if different then update the database and update the cache
+			# update it by sending the serial and weight to another program and not waiting for it to return..
+			print serialno+" reading changed from "+str(weights[id])+" to "+str(readval)
+			weights[id] = readval
+			sendReading(id,weights[id])
+		else:
+			if debug: print "reading unchanged"
+			# LONG TIME SINCE LAST READING?
+	if debug: print ""
+			
+			
+			

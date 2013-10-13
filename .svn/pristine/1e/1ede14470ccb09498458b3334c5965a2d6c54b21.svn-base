@@ -1,0 +1,97 @@
+#!/usr/bin/python
+import os
+import sys
+import time
+from readscale import *
+import MySQLdb as mdb
+from time import localtime, strftime
+import os.path
+#import numpy
+
+
+
+con = None
+debug = None
+
+## connect to the database
+con = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');
+cur = con.cursor(mdb.cursors.DictCursor)
+# get scale info from the database
+# how many scales are there? 
+
+#for each scale, get its reading and add it to the database
+cur.execute("select id,serialno from scales")
+scalerows = cur.fetchall()
+serialnos={}
+for scale in scalerows:
+	serialnos[scale["serialno"]]=scale["id"] 
+cur.close()
+for s,i in serialnos.items():		
+	serialno=str(s)
+	id=str(i)
+	if debug: print
+	if debug: print "scale id "+id+" serial: "+serialno
+	# get most recently added reading
+	readingconnection = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');
+	readingcursor=readingconnection.cursor(mdb.cursors.DictCursor)
+	if not readingcursor.execute("select * from readings where reading_time = (select MAX(reading_time) from readings where scale_id = '"+id+"' )"):
+		cachevalue=0
+		if debug: print "no reading found for scale "+id
+	else:
+		# this should produce ONE row but in case it does not I'll refer to the rows by their numeric index
+		rows = readingcursor.fetchall() # fetchall so we can refer to the columns by name
+		reading_time = rows[0]["reading_time"]
+		if debug: print reading_time
+		cachevalue = float(rows[0]["reading_value"])
+		if debug: print "most recent reading time: " + str(reading_time)
+		if debug: print "most recent value : '" + str(cachevalue)+"'"
+		serialnos[serialno]=cachevalue
+		if debug: print "scale id:"+id+" weighs: "+str(serialnos[serialno])
+		readingcursor.close()
+		readingconnection.close()
+
+
+while 1:
+	for s,w in serialnos.items():		
+		serialno=str(s)
+		weight=str(w)
+		if debug: print
+		if debug: print " serial: "+serialno
+		## time.sleep(.5) # please only one reading per second
+		## read the live scale value
+		reading = readScale(serialno)
+		if debug: print "raw reading '" + reading +"'"
+		readval = float(reading.split(" ")[0])
+		readunit = reading.split(" ")[1]
+		## if the units are ounces ("oz") then convert to "g"
+		if readunit == "oz" and readval !=0:
+			readval = readval*28.3495
+			if debug: print "converted oz to g"
+		if debug: print "current weight : '" + str(readval) +"' "+readunit
+		if debug: print "current time   : "+strftime("%Y-%m-%d %H:%M:%S", localtime())
+		
+		## compare the cached value with the current value
+		if readval != float(w):
+			## if different then update the database and update the cache
+			# update it by sending the serial and weight to another program and not waiting for it to return..
+			print serialno+" reading changed from "+str(w)+" to "+str(readval)
+		else:
+			if debug: print "reading unchanged"
+			# LONG TIME SINCE LAST READING?
+			
+con.close()
+
+
+/*
+				writecur = con.cursor()
+				rightnow=str(strftime('%Y-%m-%d %H:%M:%S', localtime()))
+				sql = "insert into readings(reading_time,reading_value,reading_units,scale_id) values ('%s', '%s', '%s', '%s')"%(rightnow,readval,readunit,id)
+				writecur.execute (sql)
+				con.commit()
+				if debug: print "inserted new reading in database"
+				print rightnow + " scale " + id + " changed from "+str(cachevalue) + " to " + str(readval) + readunit
+				cachevalue = readval
+			except mdb.Error, e:  
+				print "Error %d: %s" % (e.args[0],e.args[1])
+				sys.exit(1)
+*/
