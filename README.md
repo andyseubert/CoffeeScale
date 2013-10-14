@@ -155,9 +155,10 @@ getscaleinfo.py
  
 TODO
 --
+ - not run as root!
  - triggered events
   - watch for and react to events such as
-   - newly filled coffee pot <- send alert
+   - newly filled coffee pot
    - empty pot
    - draw from pumper
  - interact with web services
@@ -167,8 +168,14 @@ TODO
   - sms  
  - admin backend
   - ability to add and remove scales interactively
- - users
+  - monitor alerts
+  - reports on coffee consumption/activity
+  - administer users
   - 
+ - users
+  - add user interface where users can sign up to receive alerts.
+ - web display
+  - more interactivity
 
 
 update 
