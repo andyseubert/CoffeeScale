@@ -9,8 +9,10 @@ print "Content-type: text/html\n\n"
 
 debug = 1 
 con = None
+## should probably get these from the database..
 full = float(1700)
-empty = float(198) 
+empty = float(10) # AKA "tare"
+contents = "stuff"
 try:
 	## connect to the database
 	con = mdb.connect('localhost', 'coffeeuser', 'coffee16', 'coffeedb');
@@ -34,7 +36,7 @@ try:
 		else:
 			print "<div id=\"right\" >\n"
 			
-		print "scale id "+ scale_id+" serial: "+ serialno + "\n" #" named: " + scale_name + "\n"
+		print "scale id "+ scale_id+" serial: "+ serialno + "\n<br/>"#named: " + scale_name + "\n<br/>"
 		# get most recently added reading
 		if not cur.execute("select * from readings where reading_time = (select MAX(reading_time) from readings where scale_id = '"+scale_id+"' )"):
 			lastreading=0
@@ -47,26 +49,19 @@ try:
 			lastreading = float(rows[0]["reading_value"])
 			units=rows[0]["reading_units"]
 
-		if debug: print "\n<br />reading from database"+"<br />\n"
-		if debug: print "most recent reading time: " + str(reading_time) +"<br />\n"
-		if debug: print "most recent value : " + str(lastreading) + units +"<br />\n"
-
-		print "<br />\n"
-		print "full is " + str(full) + "<br />\n"
-		print "empty is " + str(empty) + "<br />\n"
 		print "CURRENT READING: " + str(lastreading) + units +"<br />\n"
 		
 		### calculate fullness
 		if lastreading == 0 or lastreading < (empty + 10) :
-			print "water bottle missing<br />\n"
+			print contents + " missing<br />\n"
 			pctfull = 0
 			pctpx = 0
 		elif lastreading == empty :
-			print "water bottle empty<br />\n"
+			print contents + " empty<br />\n"
 			pctfull = 0 
 			pctpx = 0
 		else:
-			print "there are " + str(lastreading-empty) +"g of water<br />\n"
+			print "I read " + str(lastreading-empty) +"g of "+ contents +"<br />\n"
 			pctfull = (((lastreading-empty) / full)*100)
 			#pctfull = round((((lastreading - empty) / full)*100),2)
 			print str(pctfull)+"% full<br />\n"
@@ -81,9 +76,16 @@ try:
 		print """
 				</div>
 			</div>
-			</div>
 		"""
+		
+		if debug: print "\n<br />reading from database"+"<br />\n"
+		if debug: print "most recent reading time: " + str(reading_time) +"<br />\n"
+		if debug: print "most recent value : " + str(lastreading) + units +"<br />\n"
 
+		print "<br />\n"
+		print "full is " + str(full) + "<br />\n"
+		print "empty is " + str(empty) + "<br />\n"
+		print "</div>"
 
 except mdb.Error, e:
   
