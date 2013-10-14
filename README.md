@@ -24,6 +24,7 @@ apt-get install -y python-numpy
 ````
 
  - PYUSB
+ 
 https://github.com/walac/pyusb
 ````bash
 wget https://github.com/walac/pyusb/archive/master.zip
@@ -31,12 +32,14 @@ unzip master.zip
  cd pyusb-master/
 ./setup.py install
 ````
-mysql
+mysql setup
 --
+
 when you install it above it will ask for a password - the username associated with that password is "root"
 use phpmyadmin to create a database and tables
 
-Tables
+ - Tables
+ 
 ````SQL
 --
 -- Database: `coffeedb`
