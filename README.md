@@ -94,10 +94,11 @@ dmesg | grep -B6 DYMO | grep idVendor | cut -d"=" -f2 | cut -d"," -f1
 # this gets just the Product id
 dmesg | grep -B6 DYMO | grep idProduct | cut -d"=" -f3
 ````
+
 Trouble
 --
 caused by udev permissions:
-````
+````sh
 python /usr/local/coffee/readscale.py
 usb.core.USBError: [Errno 13] Access denied (insufficient permissions)
 ````
