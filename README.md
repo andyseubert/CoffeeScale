@@ -39,6 +39,9 @@ when you install it above it will ask for a password - the username associated w
 use phpmyadmin to create a database and tables
 
  - Tables
+
+ tables exist to track the readings over time and maintain meta data for each scale. Ideally you could have as many scales as you like.
+ Each one gets a name and a unique serial number as found from dmesg.
  
 ````SQL
 --
@@ -48,7 +51,6 @@ use phpmyadmin to create a database and tables
 --
 -- Table structure for table `scales`
 --
-
 
 CREATE TABLE IF NOT EXISTS `scales` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -60,8 +62,6 @@ CREATE TABLE IF NOT EXISTS `scales` (
   `data_mode_ounces` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
-
 
 --
 -- Table structure for table `readings`
@@ -145,6 +145,31 @@ for device in devices:
 
 read the scale should output just one number: the weight in grams
  
+getscaleinfo.py
+-- 
+
+ - this script's sole purpose is to get the serial number and metadata from the scales and insert it into the database. 
+ - it is the framework for part of the admin system
+ 
+
+ 
+TODO
+--
+ - triggered events
+  - watch for and react to events such as
+   - newly filled coffee pot <- send alert
+   - empty pot
+   - draw from pumper
+ - interact with web services
+  - twitter
+  - facebook
+  - email
+  - sms  
+ - admin backend
+  - ability to add and remove scales interactively
+ - users
+  - 
+
 
 update 
 02/8/2013
