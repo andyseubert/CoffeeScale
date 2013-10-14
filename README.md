@@ -149,8 +149,23 @@ getscaleinfo.py
 -- 
 
  - this script's sole purpose is to get the serial number and metadata from the scales and insert it into the database. 
- - it is the framework for part of the admin system
+ - it is the initial framework for part of the admin system
  
+index.php
+--
+
+ - this is the initial web display. Currently uses javascript to query the script 'scaleReport.py'
+````javascript
+function getStatus() { 
+    $('div#status').load('/cgi-bin/scaleReport.py');
+    setTimeout("getStatus()",500); 
+}
+````
+scaleReport.py
+--
+
+ - this scripts only job is to report the latest scale reading so the web page can grab it 
+ - queries the database to determine how many scales exist in the database and creates ````<div> ```` sections for each one
 
  
 TODO
@@ -178,11 +193,11 @@ TODO
   - more interactivity
 
 
-update 
+update
 02/8/2013
 the SD card died so I have a new SD card and am glad I checked the code in
-I am trying "mobiuslinux" for the distro this time: http://moebiuslinux.sourceforge.net/ it is smaller and has no graphical stuff. I may come to need graphical stuff but for now just the basics will hopefully make a faster updating thinger
-this required installing python! apt-get install python -y
+I am trying "mobiuslinux" for the distro this time:
+http://moebiuslinux.sourceforge.net/ it is smaller and has no graphical stuff. I may come to need graphical stuff but for now just the basics will hopefully make a faster updating thinger
 
  
 
