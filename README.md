@@ -4,6 +4,7 @@ CoffeeScale
 Read a USB scale with RaspBerryPi store the data in a database and display coffee status. 
  
 Requirements / Setup Commands
+-----
 ````
 sudo apt-get update
 sudo apt-get upgrade
