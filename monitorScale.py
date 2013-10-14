@@ -24,10 +24,10 @@ cur = con.cursor(mdb.cursors.DictCursor)
 cur.execute("select id,serialno from scales")
 scalerows = cur.fetchall()
 serialnos={}
-weights={}
+lastreading={}
 for scale in scalerows:
 	serialnos[scale["serialno"]]=scale["id"] 
-	weights[str(scale["id"])] = 0
+	lastreading[str(scale["id"])] = 0
 
 cur.close()
 
@@ -96,32 +96,35 @@ while 1:
 					if debug: print "current time   : "+strftime("%Y-%m-%d %H:%M:%S", localtime())
 					
 					## compare the cached value with the current value
-					if (readval != float(weights[id])) or (int(round(time.time() * 1000)) - readmillis) > 5:
+					if (readval != float(lastreading[id])) or (int(round(time.time() * 1000)) - readmillis) > 5:
 						## if different then update the database and update the cache
 						
 						# determine the magnitude of the change here
-						delta = abs(readval - float(weights[id]))
+						delta = abs(readval - float(lastreading[id]))
 						# a small change of a few grams should not be noted
 						if delta > 5 or (int(round(time.time() * 1000)) - readmillis) > 5: 
 							# update it by sending the serial and weight to another program and not waiting for it to return..
-							if (readval != float(weights[id])):
-								print serialno+" reading changed from "+str(weights[id])+" to "+str(readval)
-								weights[id] = readval
-								sendReading(id,weights[id])							
+							if (readval != float(lastreading[id])):
+								print serialno+" reading changed from "+str(lastreading[id])+" to "+str(readval)
+								sendReading(id,readval)							
 							readmillis = int(round(time.time() * 1000))
 						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
 						if delta > 800 :
 							# see if it's a positive or negative change
-							if ( readval > weights[id]):
+							if ( readval > lastreading[id]):
 								# push started
 								print "push start"
 							else:
 								#push ended
 								print "push end"
+								## here you would calculate the amount removed by the push
+								removed = (lastreading[id] - readval)
+								print "looks like "+str(removed)+" was removed"
 							
 					else:
 						if debug: print "reading unchanged"
-						
+					## set the last read value to the current read value 
+					lastreading[id] = readval
 			except usb.core.USBError as e:
 				print "usb core error:"
 				print e
