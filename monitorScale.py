@@ -119,7 +119,7 @@ while 1:
 								#push ended
 								print "push end"
 								## here you might calculate the amount removed by the push if you knew the reading before the push started...
-								print "removed "+str(readval-prepush)+" g"
+								print "removed "+str(prepush - readval)+" g"
 														
 					else:
 						if debug: print "reading unchanged"
