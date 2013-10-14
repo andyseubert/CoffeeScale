@@ -114,13 +114,13 @@ while 1:
 							if ( readval > lastreading[id]):
 								# push started
 								print "push start"
+								prepush=lastreading[id]
 							else:
 								#push ended
 								print "push end"
-								## here you would calculate the amount removed by the push
-								removed = (lastreading[id] - readval)
-								print "looks like "+str(removed)+" was removed"
-							
+								## here you might calculate the amount removed by the push if you knew the reading before the push started...
+								print "removed "+str(readval-prepush)+" g"
+														
 					else:
 						if debug: print "reading unchanged"
 					## set the last read value to the current read value 
