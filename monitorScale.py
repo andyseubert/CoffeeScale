@@ -112,7 +112,7 @@ while 1:
 						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
 						if delta > 800 :
 							# see if it's a positive or negative change
-							if ( float(readval) > float(weights[id])):
+							if ( readval > weights[id]):
 								# push started
 								print "push start"
 							else:
