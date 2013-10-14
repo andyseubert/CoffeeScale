@@ -145,6 +145,18 @@ for device in devices:
 
 read the scale should output just one number: the weight in grams
  
+monitorScale.py
+--
+
+ - core of the system - runs constantly to read the scale(s) and determine if the reading changed
+ - if the reading changes, send the new reading (time stamped) to the database via the script ````sendReading.py````
+ 
+sendReading.py
+--
+
+ - imported into ````monitorScale.py```` via an include
+ - sole purpose is to send a reading into the database and timestamp it. ````monitorScale.py```` sends the scale id and the weight values to this script for saving.
+ 
 getscaleinfo.py
 -- 
 
