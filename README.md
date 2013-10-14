@@ -5,6 +5,9 @@ Read a USB scale with RaspBerryPi store the data in a database and display coffe
  
 Requirements / Setup Commands
 -----
+
+packages
+--
 ````bash
 sudo apt-get update
 sudo apt-get upgrade
@@ -19,14 +22,15 @@ sudo apt-get -y install ssh python apache2 libusb-1.0 mysql-server python-mysqld
 want arrays in python? use numpy
 apt-get install -y python-numpy
 ````
-
 PYUSB
+--
 https://github.com/walac/pyusb
+````bash
 wget https://github.com/walac/pyusb/archive/master.zip
 unzip master.zip
  cd pyusb-master/
 ./setup.py install
- 
+````
 
 mysql
 when you install it above it will ask for a password - the username associated with that password is "root"
