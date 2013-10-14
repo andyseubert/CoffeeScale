@@ -31,10 +31,11 @@ unzip master.zip
  cd pyusb-master/
 ./setup.py install
 ````
-
 mysql
+--
 when you install it above it will ask for a password - the username associated with that password is "root"
-use phpmyadmin to create a database and tables http://rasp.unival.com/phpmyadmin/
+use phpmyadmin to create a database and tables
+
 Tables
 ````SQL
 --
@@ -73,9 +74,9 @@ CREATE TABLE IF NOT EXISTS `readings` (
 ````
 
 Connect the Scale
+--
 run dmesg to see if it is connected. the output should be almost exactly like this:
- 
-
+````bash
 [61539.300131] usb 1-1.2.1.4: new full-speed USB device number 6 using dwc_otg
 [61539.405516] usb 1-1.2.1.4: New USB device found, idVendor=0922, idProduct=8004
 [61539.405548] usb 1-1.2.1.4: New USB device strings: Mfr=1, Product=2, SerialNumber=3
@@ -83,24 +84,35 @@ run dmesg to see if it is connected. the output should be almost exactly like th
 [61539.405584] usb 1-1.2.1.4: Manufacturer: DYMO
 [61539.405596] usb 1-1.2.1.4: SerialNumber: 0000000022159
 [61539.437452] generic-usb 0003:0922:8004.0001: hiddev0: USB HID v1.01 Device [DYMO M25 25 lb Digital Postal Scale] on usb-bcm2708_usb-1.2.1.4/input0
+````
 
 bash script to extract the vendor id and product id (would be nice to use python to parse dmesg to grab the stuffs but that may not be feasible)
 in fact this may not be necessary as the scale id's are always the same...
+````bash
 # this gets just the vendor id
 dmesg | grep -B6 DYMO | grep idVendor | cut -d"=" -f2 | cut -d"," -f1
 # this gets just the Product id
 dmesg | grep -B6 DYMO | grep idProduct | cut -d"=" -f3
+````
 Trouble
+--
 caused by udev permissions:
+````
 python /usr/local/coffee/readscale.py
 usb.core.USBError: [Errno 13] Access denied (insufficient permissions)
-the fix:
+````
+ - the fix:
+````bash
 sudo vi /etc/udev/rules.d/98-dymo.rules
 $ sudo cat /etc/udev/rules.d/98-dymo.rules
 SUBSYSTEM=="usb", ATTR{idVendor}=="0922", ATTR{idProduct}=="8004", MODE="666"
+````
+
 Read the Scale
+--
 what if you have more than one scale?
 according to pyusb documentation, usb devices sometimes have "bus" and "address" identifiers
+````python
 devices = usb.core.find(find_all=True, idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
 sys.stdout.write('There are ' + str(len(devices)) + ' scales connected!\n')
 if len(devices) > 1:
@@ -108,8 +120,9 @@ if len(devices) > 1:
 else:
 	print "devices bus: " + str(devices[0].bus)
 	print "device address: " + str(devices[0].address)
- 
+````
 they also show serial numbers and here is how to get them
+````python
 devices = usb.core.find(find_all=True, idVendor=VENDOR_ID)
 sys.stdout.write('There are ' + str(len(devices)) + ' scales connected!\n')
 scales=[]
@@ -124,14 +137,17 @@ for device in devices:
 	serialno = str(usb.util.get_string(device,256,3))
 	manufacturer = str(usb.util.get_string(device,256,1))
 	description = str(usb.util.get_string(device,256,2))
+````
+
 read the scale should output just one number: the weight in grams
  
 
 update 
 02/8/2013
-the SD card died so I have a new SD card and am glad I checked the code in 
+the SD card died so I have a new SD card and am glad I checked the code in
 I am trying "mobiuslinux" for the distro this time: http://moebiuslinux.sourceforge.net/ it is smaller and has no graphical stuff. I may come to need graphical stuff but for now just the basics will hopefully make a faster updating thinger
-this required installing python! apt-get install python -y 
+this required installing python! apt-get install python -y
+
  
 
  
