@@ -5,7 +5,7 @@ Read a USB scale with RaspBerryPi store the data in a database and display coffe
  
 Requirements / Setup Commands
 -----
-````
+````bash
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install apache2
@@ -32,7 +32,7 @@ mysql
 when you install it above it will ask for a password - the username associated with that password is "root"
 use phpmyadmin to create a database and tables http://rasp.unival.com/phpmyadmin/
 Tables
-
+````SQL
 --
 -- Database: `coffeedb`
 --
@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `readings` (
   `reading_units` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=105 ;
+````
 
 Connect the Scale
 run dmesg to see if it is connected. the output should be almost exactly like this:
