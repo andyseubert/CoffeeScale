@@ -4,7 +4,7 @@ CoffeeScale
 Read a USB scale with RaspBerryPi store the data in a database and display coffee status. 
  
 Requirements / Setup Commands
-
+````
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install apache2
@@ -17,7 +17,7 @@ sudo apt-get install  phpmyadmin
 sudo apt-get -y install ssh python apache2 libusb-1.0 mysql-server python-mysqldb php5 php5-mysql phpmyadmin
 want arrays in python? use numpy
 apt-get install -y python-numpy
- 
+````
 
 PYUSB
 https://github.com/walac/pyusb
