@@ -111,15 +111,14 @@ while 1:
 							readmillis = int(round(time.time() * 1000))
 						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
 						if delta > 800 :
-							if firstrun == 0:
-								if pushing:
-									print "PUSH END "
-									pushing=None
-								else:
-									print "PUSH STARTED " 
-									pushing=1
-							else: 
-								firstrun = 0
+							# see if it's a positive or negative change
+							if ( readval > float(weights[id])):
+								# push started
+								print "push start"
+							else:
+								#push ended
+								print "push end"
+							
 					else:
 						if debug: print "reading unchanged"
 						
