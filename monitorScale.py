@@ -114,26 +114,9 @@ while 1:
 							if (readval != float(lastreading[i])):
 								if debug: print "delta: " + str(delta) + " not ignoring"
 								print "scale "+id+" reading changed from "+str(lastreading[i])+" to "+str(readval)
-								sendReading(id,readval)							
+								sendReading(id,readval)	
+								subprocess.call(["/usr/local/CoffeeScale/updateTweet.py",id,str(readval)])
 							readmillis = int(round(time.time() * 1000))
-						## if its a huge change, someone has pressed the handle - except when they are returning the pot... or this is the first reading
-						if 800 < int(delta) < 6000 :
-							if debug: print "delta > 800 : " + str(delta) + " not ignoring"
-							# see if it's a positive or negative change
-							if ( readval > lastreading[i]):
-								# push started
-								if debug: print "push start"
-								prepush=lastreading[i]
-							else:
-								#push ended
-								if debug: print "push end"
-								## here you might calculate the amount removed by the push if you knew the reading before the push started...
-								if debug: print "removed "+str(prepush - readval)+" g"
-								if prepush - readval < 1000 and (prepush-readval) > 0:
-									msg = "someone removed "+str(prepush - readval)+" g from "+id
-									subprocess.call(["/usr/local/CoffeeScale/updateTweet.py",id])
-									## here is also where you would send the amount removed to the database...
-														
 					else:
 						if debug: print "reading unchanged"
 					## set the last read value to the current read value 
