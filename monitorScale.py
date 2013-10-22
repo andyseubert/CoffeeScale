@@ -8,7 +8,7 @@ from time import localtime, strftime
 import os.path
 import usb.core
 import subprocess
-
+########### 4 scoops == 226 grams
 con = None
 debug = 0
 interface = 0
