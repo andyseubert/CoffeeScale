@@ -20,7 +20,7 @@ readmillis = 0
 # CNtwitterCoffee16
 # @cnCoffeePoton16
 ## connect to the database
-con = lite.connect('c16')
+con = lite.connect('/usr/local/CoffeeScale/c16')
 con.text_factory = str
 cur=con.cursor()
 
