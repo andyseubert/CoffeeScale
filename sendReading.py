@@ -13,7 +13,7 @@ debug = None
 
 def sendReading(id,weight):
 	## connect to the database
-	con = lite.connect('c16')
+	con = lite.connect('/usr/local/CoffeeScale/c16')
 	cur=con.cursor()
 
 	#time of insert:

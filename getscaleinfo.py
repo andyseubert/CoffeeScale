@@ -14,7 +14,7 @@ DATA_MODE_OUNCES = 11
 # connect to database
 con = None
 debug = 1
-con = lite.connect('c16')
+con = lite.connect('/usr/local/CoffeeScale/c16')
 cur=con.cursor()
 
 # find the USB Dymo scale devices
