@@ -99,10 +99,12 @@ while 1:
 					## if the units are ounces ("oz") then convert to "g"
 					if readunit == "oz" and readval !=0:
 						readval = readval*28.3495
+						readunit="g"
 						if debug: print "converted oz to g"
 					if debug: print "current weight : '" + str(readval) +"' "+readunit
 					if debug: print "current time   : "+strftime("%Y-%m-%d %H:%M:%S", localtime())
-					
+					readval = round(readval)
+					if debug: print "rounded read value is: " +str(readval)
 					## compare the cached value with the current value
 					if (readval != float(lastreading[i])) or (int(round(time.time() * 1000)) - readmillis) > 5:
 						## if different then update the database and update the cache
@@ -112,8 +114,9 @@ while 1:
 						# a small change of a few grams should not be noted
 						if 10 < int(delta) < 6000 : #or (int(round(time.time() * 1000)) - readmillis) > 5: 
 							if (readval != float(lastreading[i])):
-								if debug: print "delta: " + str(delta) + " not ignoring"
-								print "scale "+id+" reading changed from "+str(lastreading[i])+" to "+str(readval)
+								if debug:
+									print "delta: " + str(delta) + " not ignoring"
+									print "scale "+id+" reading changed from "+str(lastreading[i])+" to "+str(readval)
 								sendReading(id,readval)	
 								subprocess.call(["/usr/local/CoffeeScale/updateTweet.py",id,str(readval)])
 							readmillis = int(round(time.time() * 1000))
