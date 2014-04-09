@@ -8,3 +8,36 @@
 ##  recipient
 ##  scale_id
 
+
+import sqlite3 as lite
+import os
+import sys
+import subprocess
+import time as t
+from datetime import datetime
+from dateutil import parser
+
+def main():
+    if len(sys.argv) < 3:
+        print "not enough args"
+        exit(1)
+    scale_id  = sys.argv[0]
+    eventType = sys.argv[1]
+    recipient = sys.argv[2]
+    
+    con = lite.connect('/usr/local/CoffeeScale/c16')
+    con.text_factory = str
+    con.row_factory = lite.Row
+    cur=con.cursor()
+    cur.execute("select MAX(sms_time) as lastsms FROM texts WHERE scale_id="+scale_id+" AND type ="+eventType+" AND recipient="+recipient)
+    row=cur.fetchone()
+    if str(row[0]) == "None": ## first sms ever
+           return True
+    else :
+            then = parser.parse(row[0])
+            if debug: print "last sms to _recipient_ for "+scale_name+" was "+ str(round( (now - then ).total_seconds() / 60)) +" minutes ago"
+### if the last tweet was more than one x ago:
+            if round( (now - then ).total_seconds() / 60) > 30:
+                return True
+    return False
+

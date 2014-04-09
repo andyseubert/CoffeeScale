@@ -31,6 +31,7 @@ import subprocess
 import time as t
 from datetime import datetime
 from dateutil import parser
+import canisms
 
 debug = 1
 if debug: print "This is hour "+str(datetime.now().hour)
@@ -110,8 +111,15 @@ for i in (0,rows-1):
 	if debug: print "timediff is "+str(timediff)
 	if remainingoz < 24 and timediff < 1:
 		msg=scale_name+" just became almost empty. "+str(remainingoz)+" ounces remain"
-		if debug: print msg
-		subprocess.call(["/usr/local/CoffeeScale/sendsms.py",msg])
+		
+		## check to see if it's cool to sms
+		if (canisms(scale_id,"almostempty","5035228381@vtext.com")):
+#               ## put a new row in the database indicating a new sms was sent
+#               cur.execute("INSERT INTO texts (sms_time,scale_id,msg,recipient) VALUES ('"+str(now)+"','"+str(scale_id)+"','"+msg+"')")
+#		con.commit()
+	#		
+			if debug: print msg
+			subprocess.call(["/usr/local/CoffeeScale/sendsms.py",msg])
 	
 
 
