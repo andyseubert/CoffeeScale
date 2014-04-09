@@ -52,7 +52,7 @@ while 1:
 			print "\nscale serial:"+serialno+" is id "+id
 			print "last reading: "+str(lastreading[i])
 		time.sleep(.5) # please only one reading per second 
-		subprocess.call(["/usr/local/CoffeeScale/events.py"])
+		#subprocess.call(["/usr/local/CoffeeScale/events.py"])
 		## read the live scale value
 ## read loop
 		for device in devices:	
@@ -118,7 +118,7 @@ while 1:
 									print "delta: " + str(delta) + " not ignoring"
 									print "scale "+id+" reading changed from "+str(lastreading[i])+" to "+str(readval)
 								sendReading(id,readval)	
-								subprocess.call(["/usr/local/CoffeeScale/updateTweet.py",id,str(readval)])
+								#subprocess.call(["/usr/local/CoffeeScale/updateTweet.py",id,str(readval)])
 							readmillis = int(round(time.time() * 1000))
 					else:
 						if debug: print "reading unchanged"
