@@ -1,0 +1,44 @@
+/*
+ * OMG COFFEE
+ *
+ * Custom CSS file for the Bootstrap 3
+ * AND COFFEE EVERYWHERE!
+ * http://twitter.github.com/bootstrap/
+ *
+ * Style sheet built for COFFEE by
+ * William Hyde - @WilliHyde
+ *
+ */
+
+
+.coffee-wrap,
+.coffee-bar {
+	width: 100%;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+.coffee-wrap {
+	position: relative;
+	z-index: 1234;
+	height: 270px;
+	margin-top: 15px;
+	background-color: #bdc3c7;
+}
+.coffee-icon {
+	position: absolute;
+	z-index: 1555;
+	cursor: default;
+	padding-top: 30px;
+	opacity: 0.2;
+	width: 100%;
+	font-size: 150px;
+	text-align: center;
+	color: white;
+}
+.coffee-bar {
+	position: absolute;
+	z-index: 123;
+	bottom: 0;
+	overflow: hidden;
+	background-color: #4B3621;
+}

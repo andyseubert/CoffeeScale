@@ -102,7 +102,10 @@ for i in (0,rows-1):
 		
 	## now we have the last 2 readings.
 ## How many ounces are left?
-	remainingoz = round(((newest_value-empty)*.035274),1)
+	if newest_value > 0:
+		remainingoz = round(((newest_value-empty)*.035274),1)
+	else:
+		remainingoz = 0
 	if debug: print str(remainingoz) +" ounces remain of "+ scale_name
 	
 ## NEARLY EMPTY HERE	only care if the newest_time is less than one minute ago
@@ -110,14 +113,12 @@ for i in (0,rows-1):
 	timediff=round( (now - then ).total_seconds() / 60)
 	if debug: print "timediff is "+str(timediff)
 	if remainingoz < 24 and timediff < 1:
-		msg=scale_name+" just became almost empty. "+str(remainingoz)+" ounces remain"
-		
+		msg=scale_name+" just became almost empty. "+str(remainingoz)+" ounces remain"		
 		## check to see if it's cool to sms
 		if (canisms(scale_id,"almostempty","5035228381@vtext.com")):
 #               ## put a new row in the database indicating a new sms was sent
-#               cur.execute("INSERT INTO texts (sms_time,scale_id,msg,recipient) VALUES ('"+str(now)+"','"+str(scale_id)+"','"+msg+"')")
-#		con.commit()
-	#		
+			cur.execute("INSERT INTO texts (sms_time,scale_id,msg,recipient) VALUES ('"+str(now)+"','"+str(scale_id)+"','"+msg+"')")
+			con.commit()		
 			if debug: print msg
 			subprocess.call(["/usr/local/CoffeeScale/sendsms.py",msg])
 	
