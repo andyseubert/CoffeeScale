@@ -9,6 +9,7 @@ import shutil
 import time as t
 from datetime import datetime
 import dateutil.parser as parser
+import subprocess
 
 debug = 0
 con = None
@@ -47,16 +48,13 @@ pagehead = """
 <body>
 <div class="container">
 		<div class="row">
-			<div class="col-md-12">
-				<h1>16th Floor Coffee Status</h1>
-				<hr>
-				
+			<div class="col-md-12">				
 	<div id="status">
  
 """
 
 while 1:
-	t.sleep(2)
+	#t.sleep(2)
 	now = datetime.now()
 	file=open(temphtml,'w')
 	file.write(pagehead)
@@ -76,12 +74,10 @@ while 1:
 	sn=[]
 	sid=[]
 	sname=[]
-	i=0
 	for scale in scalerows:
 		sn.append(str(scale["serialno"]))
 		sid.append(str(scale["id"]))
 		sname.append(str(scale["scale_name"]))
-		++i
 	for i in xrange(rows):
 		lastreading=0
 		pctfull=0
@@ -201,6 +197,9 @@ while 1:
 		scaletmpfile.close()
 		## copy single scale report
 		shutil.copyfile("/tmp/"+scaletmpfilename,indexpath+scaletmpfilename)
+		shebang="/usr/local/CoffeeScale/webkit2png -x 800 600 --scale=600 550 -o "+scale_id+".png http://localhost/"+scale_id+".html"
+		cmd=shebang.split()
+		subprocess.call(["/usr/local/CoffeeScale/webkit2png","-x","800","600","--scale","600","550","-o",scale_id+".png","http://localhost/"+scale_id+".html"])
 
 	### close all scale file here	
 	file.write ( """

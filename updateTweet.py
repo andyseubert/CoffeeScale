@@ -61,14 +61,14 @@ for i in (0,rows-1):
 	row=cur.fetchone()
 	weight=row["reading_value"]
 	# don't tweet that there is more than possible
-	if weight>full:sys.exit(0)
-	
-	oz = str(round(((weight-empty)*.035274),1))
-	msg += "\n"+oz+"oz-" +scale_name+"\nupdateTweet"
-	if debug: print "------tweeting:\n"+msg+"\n-------"
-	subprocess.call(["/usr/local/CoffeeScale/tweet.py",msg])
-	
-	smsmsg=oz+" ounces remain in "+scale_name
+	if weight<full+(full*.02):	
+		oz = round(((weight-empty)*.035274),1)
+		if oz>0:
+			msg += "\n"+str(oz)+"oz-" +scale_name+"\nupdateTweet"
+			if debug: print "------tweeting:\n"+msg+"\n-------"
+			subprocess.call(["/usr/local/CoffeeScale/tweet.py",msg])
+		
+	smsmsg=str(oz)+" ounces remain in "+scale_name
 #subprocess.call(["/usr/local/CoffeeScale/sendsms.py",smsmsg])
 
 cur.execute("INSERT INTO tweets (tweet_time,scale_id,message) VALUES (?,?,?)",(str(now),str(scale_id),msg))
