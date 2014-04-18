@@ -20,6 +20,7 @@ cups_divisor=float(354.8)
 cups="0"
 temphtml="/tmp/index.html" #<-- write to temp file then copy over index file. Should make it better
 indexhtml="/usr/local/CoffeeScale/index.html"
+indexpath="/usr/local/CoffeeScale/"
 
 pagehead = """
 <html>
@@ -88,9 +89,16 @@ while 1:
 		serialno=sn[i]
 		scale_id=sid[i]
 		scale_name=sname[i]
+		## make a temp file for each scale to put html into for the twittering
+		scaletmpfilename=str(scale_id)+".html"
+		scaletmpfile=open("/tmp/"+scaletmpfilename,'w')
+		scaletmpfile.write(pagehead)
+		
 		if not cur.execute("select * from (select reading_value,reading_units, scale_id, MAX(reading_time) as reading_time from readings where scale_id = "+scale_id+" ) "):
 			lastreading=0
-			if debug: file.write ( "no reading found for scale "+ scale_id + "<br/>\n" )
+			if debug:
+				file.write ( "no reading found for scale "+ scale_id + "<br/>\n" )
+				scaletmpfile.write ( "no reading found for scale "+ scale_id + "<br/>\n" )
 		else:
 			# this should produce ONE row 
 			rows = cur.fetchone() 
@@ -151,7 +159,56 @@ while 1:
 						</div>
 					</div>
 		""" )
-		
+		## single scale result file 
+		scaletmpfile.write ( """
+
+				<div class="row">
+					<div class="col-md-4">
+						<div class="panel panel-info">
+		""" )
+		scaletmpfile.write ( "				<div class=\"panel-heading\">"+scale_name+"</div>" )
+		scaletmpfile.write ( "				<div class=\"panel-body\">" )
+		scaletmpfile.write ( contentsmsg )
+		scaletmpfile.write ( "					<div class=\"coffee-wrap\">" )
+		scaletmpfile.write ( "					<span class=\"coffee-icon glyphicon glyphicon-tint\"></span>" )
+		scaletmpfile.write ( "					<div class=\"coffee-bar\" style=\"height: "+str(pctfull)+"%;\"></div>" )
+		scaletmpfile.write ( "					</div>" )
+		scaletmpfile.write ( "				</div>" )
+		scaletmpfile.write ( " 			<div class=\"panel-footer\">" )
+		scaletmpfile.write ( "					last changed at "+str(reading_time)+"<br>" )
+		scaletmpfile.write ( "					current scale reading:"+str(lastreading)+"g<br>" )
+		scaletmpfile.write ( "					last refill time :"+str(last_fulltime)+"<br>" )
+		scaletmpfile.write ( "					this page last updated :"+str(now)+"<br>" )
+		if debug:
+			scaletmpfile.write ( "				reading from database<br>" )
+			scaletmpfile.write ( " 			most recent reading time: "+str(reading_time)+"<br>" )
+			scaletmpfile.write ( "				most recent value : "+str(lastreading)+"<br>" )
+			scaletmpfile.write ( " 			<strong>full is "+str(full)+"<br>" )
+			scaletmpfile.write ( " 			empty is "+str(empty)+"</strong><br>" )
+			scaletmpfile.write ( "				"+str(lastreading-empty)+"g of "+contents+"<br>" )
+			scaletmpfile.write ( "              "+serialno+"<br/>" )
+		scaletmpfile.write ( """
+							</div>
+						</div>
+					</div>
+		""" )
+		### close single scale report file here		
+		scaletmpfile.write ( """
+			</div>
+			<a href=http://knowledge25.collegenet.com/display/~andys/raspberry+coffee>http://knowledge25.collegenet.com/display/~andys/raspberry+coffee</a>
+			
+		</div>
+		</div>
+		</div>
+	
+		</body>
+		</html>
+		""")
+		scaletmpfile.close()
+		## copy single scale report
+		shutil.copyfile("/tmp/"+scaletmpfilename,indexpath+scaletmpfilename)
+
+	### close all scale file here	
 	file.write ( """
 		</div>
 		<a href=http://knowledge25.collegenet.com/display/~andys/raspberry+coffee>http://knowledge25.collegenet.com/display/~andys/raspberry+coffee</a>

@@ -52,7 +52,7 @@ while 1:
 			print "\nscale serial:"+serialno+" is id "+id
 			print "last reading: "+str(lastreading[i])
 		time.sleep(.5) # please only one reading per second 
-		#subprocess.call(["/usr/local/CoffeeScale/events.py"])
+		subprocess.call(["/usr/local/CoffeeScale/events.py"])
 		## read the live scale value
 ## read loop
 		for device in devices:	

@@ -17,13 +17,13 @@ import time as t
 from datetime import datetime
 from dateutil import parser
 
-def main():
-    if len(sys.argv) < 3:
-        print "not enough args"
-        exit(1)
-    scale_id  = sys.argv[0]
-    eventType = sys.argv[1]
-    recipient = str(sys.argv[2])
+def main(scale_id,eventType,recipient):
+    #if len(sys.argv) < 3:
+    #    print "not enough args"
+    #    exit(1)
+    #scale_id  = sys.argv[0]
+    #eventType = sys.argv[1]
+    #recipient = str(sys.argv[2])
     
     con = lite.connect('/usr/local/CoffeeScale/c16')
     con.text_factory = str

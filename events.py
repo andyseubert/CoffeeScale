@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-# this knows about events to report on
-
 # these are my notes to-do not what currently exists...
 #events
 #- full [ reading within a few ounces of full value ]
@@ -32,8 +30,12 @@ import time as t
 from datetime import datetime
 from dateutil import parser
 import canisms
+from canisms import main
 
 debug = 1
+recipient="5035228381@vtext.com"
+
+
 if debug: print "This is hour "+str(datetime.now().hour)
 
 if datetime.today().weekday() >4:
@@ -112,23 +114,41 @@ for i in (0,rows-1):
 	then = parser.parse(newest_time)
 	timediff=round( (now - then ).total_seconds() / 60)
 	if debug: print "timediff is "+str(timediff)
-	if remainingoz < 24 and timediff < 1:
-		msg=scale_name+" just became almost empty. "+str(remainingoz)+" ounces remain"		
+	if remainingoz < 24:
+		if timediff <2:
+			msg=scale_name+" just became almost empty. "+str(remainingoz)+" ounces remain"
+		if timediff >2:
+			msg=scale_name+" is almost empty. "+str(remainingoz)+" ounces remain and has been for "+str(timediff)+" minutes"
 		## check to see if it's cool to sms
-		if (canisms(scale_id,"almostempty","5035228381@vtext.com")):
+		if (canisms.main(scale_id,"almostempty",recipient)):
+#               ## put a new row in the database indicating a new sms was sent
+			cur.execute("INSERT INTO texts (sms_time,scale_id,msg,type,recipient) VALUES (?,?,?,?,?)",(str(now),str(scale_id),msg,"almostempty",recipient))
+			con.commit()		
+			if debug: print msg
+			subprocess.call(["/usr/local/CoffeeScale/sendsms.py",msg])
+## Missing from scale for longer than it takes to refill
+	if remainingoz == 0 and timediff > 10:
+		msg=scale_name+" is done brewing"
+		## check to see if it's cool to sms
+		if (canisms.main(scale_id,"donebrewing",recipient)):
 #               ## put a new row in the database indicating a new sms was sent
 			cur.execute("INSERT INTO texts (sms_time,scale_id,msg,recipient) VALUES ('"+str(now)+"','"+str(scale_id)+"','"+msg+"')")
 			con.commit()		
 			if debug: print msg
 			subprocess.call(["/usr/local/CoffeeScale/sendsms.py",msg])
-	
-
-
-	
+### freshly filled
+	if remainingoz >= full and timediff <= 2:
+		msg=scale_name+" has fresh coffee"
+		## check to see if it's cool to sms
+		if (canisms.main(scale_id,"freshcoffee",recipient)):
+#               ## put a new row in the database indicating a new sms was sent
+			cur.execute("INSERT INTO texts (sms_time,scale_id,msg,recipient) VALUES ('"+str(now)+"','"+str(scale_id)+"','"+msg+"')")
+			con.commit()		
+			if debug: print msg
+			subprocess.call(["/usr/local/CoffeeScale/sendsms.py",msg])
+			
 		
-## get the latest reading
-	#cur.execute("select * from (select reading_value,reading_units, scale_id, MAX(reading_time) as reading_time from readings where scale_id = "+scale_id+" ) ")
-	
+		
 
 		
 #### SQL SNIPS
