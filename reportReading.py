@@ -175,10 +175,6 @@ while 1:
 		scaletmpfile.write ( "					</div>" )
 		scaletmpfile.write ( "				</div>" )
 		scaletmpfile.write ( " 			<div class=\"panel-footer\">" )
-		scaletmpfile.write ( "					last changed at "+str(reading_time)+"<br>" )
-		scaletmpfile.write ( "					current scale reading:"+str(lastreading)+"g<br>" )
-		scaletmpfile.write ( "					last refill time :"+str(last_fulltime)+"<br>" )
-		scaletmpfile.write ( "					this page last updated :"+str(now)+"<br>" )
 		if debug:
 			scaletmpfile.write ( "				reading from database<br>" )
 			scaletmpfile.write ( " 			most recent reading time: "+str(reading_time)+"<br>" )
@@ -195,8 +191,6 @@ while 1:
 		### close single scale report file here		
 		scaletmpfile.write ( """
 			</div>
-			<a href=http://knowledge25.collegenet.com/display/~andys/raspberry+coffee>http://knowledge25.collegenet.com/display/~andys/raspberry+coffee</a>
-			
 		</div>
 		</div>
 		</div>

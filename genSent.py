@@ -54,7 +54,7 @@ class MarkovLibrary:
         return random.sample(self.chains[first][second],1)[0]
 
 def main():
-    filename = "taoteching.txt"
+    filename = "/usr/local/CoffeeScale/taoteching.txt"
     #argv should contain the file name
     #if (len(argv) != 1):
     #    print "usage: python mkgen.py <filename>"

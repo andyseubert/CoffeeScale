@@ -106,6 +106,7 @@ for i in (0,rows-1):
 ## How many ounces are left?
 	if newest_value > 0:
 		remainingoz = round(((newest_value-empty)*.035274),1)
+		if remainingoz < 0 : remainingoz = 0
 	else:
 		remainingoz = 0
 	if debug: print str(remainingoz) +" ounces remain of "+ scale_name
@@ -114,7 +115,7 @@ for i in (0,rows-1):
 	then = parser.parse(newest_time)
 	timediff=round( (now - then ).total_seconds() / 60)
 	if debug: print "timediff is "+str(timediff)
-	if remainingoz < 24:
+	if 0 < remainingoz < 24:
 		if timediff <2:
 			msg=scale_name+" just became almost empty. "+str(remainingoz)+" ounces remain"
 		if timediff >2:
@@ -127,7 +128,7 @@ for i in (0,rows-1):
 			if debug: print msg
 			subprocess.call(["/usr/local/CoffeeScale/sendsms.py",msg])
 ## Missing from scale for longer than it takes to refill
-	if remainingoz == 0 and timediff > 10:
+	if newest_value == 0 and timediff > 10:
 		msg=scale_name+" is done brewing"
 		## check to see if it's cool to sms
 		if (canisms.main(scale_id,"donebrewing",recipient)):

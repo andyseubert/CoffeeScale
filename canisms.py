@@ -24,7 +24,8 @@ def main(scale_id,eventType,recipient):
     #scale_id  = sys.argv[0]
     #eventType = sys.argv[1]
     #recipient = str(sys.argv[2])
-    
+    debug=1
+    now = datetime.now()
     con = lite.connect('/usr/local/CoffeeScale/c16')
     con.text_factory = str
     con.row_factory = lite.Row
@@ -36,7 +37,7 @@ def main(scale_id,eventType,recipient):
         return True
     else :
             then = parser.parse(row[0])
-            if debug: print "last sms to _recipient_ for "+scale_name+" was "+ str(round( (now - then ).total_seconds() / 60)) +" minutes ago"
+            if debug: print "last sms to "+recipient+" for "+scale_id+" was "+ str(round( (now - then ).total_seconds() / 60)) +" minutes ago"
 ### if the last tweet was more than one x ago:
             if round( (now - then ).total_seconds() / 60) > 30:
                 print "Yes"

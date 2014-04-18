@@ -26,7 +26,11 @@ finally:
 
 ##### THIS WILL UPDATE STATUS
 twitter = Twython(c_key,c_secret,a_key,a_secret)
-twitter.update_status(status=sys.argv[1])
+if sys.argv[1] == "img":
+	photo= open (sys.argv[2],'rb')
+	twitter.update_status_with_media(status=sys.argv[3], media=photo)
+else:
+	twitter.update_status(status=sys.argv[1])
 
 ######
 ## only need this if asking to authorize this app to post on behalf of someone else		
