@@ -32,7 +32,7 @@ from dateutil import parser
 import canisms
 from canisms import main
 
-debug = 1
+debug = 0
 recipient="5035228381@vtext.com"
 
 
@@ -115,7 +115,7 @@ for i in (0,rows-1):
 	then = parser.parse(newest_time)
 	timediff=round( (now - then ).total_seconds() / 60)
 	if debug: print "timediff is "+str(timediff)
-	if 0 < remainingoz < 24:
+	if 0 < remainingoz < 8:
 		if timediff <2:
 			msg=scale_name+" just became almost empty. "+str(remainingoz)+" ounces remain"
 		if timediff >2:

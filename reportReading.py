@@ -138,10 +138,10 @@ while 1:
 		file.write ( "					</div>" )
 		file.write ( "				</div>" )
 		file.write ( " 			<div class=\"panel-footer\">" )
-		file.write ( "					last changed at "+str(reading_time)+"<br>" )
+#		file.write ( "					last changed at "+str(reading_time)+"<br>" )
 		file.write ( "					current scale reading:"+str(lastreading)+"g<br>" )
-		file.write ( "					last refill time :"+str(last_fulltime)+"<br>" )
-		file.write ( "					this page last updated :"+str(now)+"<br>" )
+#		file.write ( "					last refill time :"+str(last_fulltime)+"<br>" )
+		file.write ( "					this page last updated :"+str(now.strftime("%I:%M%p on %B %d, %Y"))+"<br>" )
 		if debug:
 			file.write ( "				reading from database<br>" )
 			file.write ( " 			most recent reading time: "+str(reading_time)+"<br>" )
