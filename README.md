@@ -97,6 +97,14 @@ serial 0000000038053 already exists in database
 
 ````
 
+Cron
+--
+
+add psmonitor.sh to the crontab - this will watch for the running monitorScale.py application and restart it if necessary.
+````bash
+* * * * * /root/psmonitor.sh
+````
+
 Trouble
 --
 caused by udev permissions:
