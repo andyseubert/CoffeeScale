@@ -54,6 +54,7 @@ CREATE TABLE 'tweets' ('scale_id' INTEGER PRIMARY KEY NOT NULL, 'tweet_time' INT
 
 Connect the Scale
 --
+
 run dmesg to see if it is connected. the output should be almost exactly like this:
 ````bash
 [61539.300131] usb 1-1.2.1.4: new full-speed USB device number 6 using dwc_otg
@@ -67,11 +68,33 @@ run dmesg to see if it is connected. the output should be almost exactly like th
 
 bash script to extract the vendor id and product id (would be nice to use python to parse dmesg to grab the stuffs but that may not be feasible)
 in fact this may not be necessary as the scale id's are always the same...
+
 ````bash
 # this gets just the vendor id
 dmesg | grep -B6 DYMO | grep idVendor | cut -d"=" -f2 | cut -d"," -f1
 # this gets just the Product id
 dmesg | grep -B6 DYMO | grep idProduct | cut -d"=" -f3
+````
+
+Run getscaleinfo.py
+--
+it should tell you how many scales are connected, and whether or not they exist in the database. If they don't exist, this will add them
+````bash
+root@c16:/usr/local/CoffeeScale# ./getscaleinfo.py
+There are 2 scales connected!
+scale #1
+0000000022159
+DYMO
+M25 25 lb Digital Postal Scale
+row:1
+serial 0000000022159 already exists in database
+scale #2
+0000000038053
+DYMO
+M25 25 lb Digital Postal Scale
+row:1
+serial 0000000038053 already exists in database
+
 ````
 
 Trouble
