@@ -14,19 +14,11 @@ Requirements / Setup Commands
 ````bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install apache2
-sudo apt-get install libusb-1.0
-sudo apt-get install mysql-server
-sudo apt-get install python-mysqldb
-sudo apt-get install php5
-sudo apt-get install php5-mysql
-sudo apt-get install  phpmyadmin
-sudo apt-get -y install ssh python apache2 libusb-1.0 mysql-server python-mysqldb php5 php5-mysql phpmyadmin
-want arrays in python? use numpy
-apt-get install -y python-numpy
-apt-get install python-setuptools
-easy_install pip
+apt-get -y remove festival apache2-mpm-prefork apache2-utils apache2.2-bin apache2.2-common libapache2-mod-php5
+apt-get -y install mpg123  php5-sqlite man espeak sqlite3 subversion git openssh-server ntp lighttpd libusb-1.0 mysql-server python python-mysqldb php5 php5-mysql phpmyadmin python-setuptools python-pip python-dateutil ssmtp mailutils
 pip install twython
+pip install pyusb
+ pip install shutil
 ````
 
  - PYUSB
@@ -38,48 +30,26 @@ unzip master.zip
  cd pyusb-master/
 ./setup.py install
 ````
-mysql setup
+sqlite setup
 --
-
-when you install it above it will ask for a password - the username associated with that password is "root"
-use phpmyadmin to create a database and tables
-
- - Tables
-
- tables exist to track the readings over time and maintain meta data for each scale. Ideally you could have as many scales as you like.
- Each one gets a name and a unique serial number as found from dmesg.
- 
+````bash
+sqlite3 c16
+````
+CREATE TABLES 
+--
 ````SQL
---
--- Database: `coffeedb`
---
--- --------------------------------------------------------
---
--- Table structure for table `scales`
---
 
-CREATE TABLE IF NOT EXISTS `scales` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `scale_name` varchar(255) NOT NULL,
-  `vendor_id` varchar(64) NOT NULL,
-  `product_id` varchar(64) NOT NULL,
-  `serialno` varchar(255) NOT NULL,
-  `data_mode_grams` varchar(32) NOT NULL,
-  `data_mode_ounces` varchar(32) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Table structure for table `readings`
---
-CREATE TABLE IF NOT EXISTS `readings` (
-  `reading_time` datetime NOT NULL,
-  `reading_value` int(11) NOT NULL,
-  `scale_id` int(11) NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reading_units` varchar(10) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=105 ;
+CREATE TABLE 'settings' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'setting_name' REAL NOT NULL, 'setting_value' REAL NOT NULL);
+CREATE TABLE 'readings' (
+  'reading_time' datetime NOT NULL,
+  'reading_value' INTEGER NOT NULL,
+  'scale_id' INTEGER NOT NULL,
+  'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  'reading_units' varchar(10) NOT NULL);
+CREATE TABLE 'scales' (
+  'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'scale_name' TEXT NOT NULL,'vendor_id' TEXT NOT NULL,'product_id' TEXT NOT NULL,'serialno' TEXT NOT NULL,'data_mode_grams' INTEGER NOT NULL,'data_mode_ounces' INTEGER NOT NULL
+  );
+CREATE TABLE 'tweets' ('scale_id' INTEGER PRIMARY KEY NOT NULL, 'tweet_time' INTEGER NOT NULL, 'message' INTEGER NOT NULL, 'type' INTEGER NOT NULL default 'update');
 ````
 
 Connect the Scale
