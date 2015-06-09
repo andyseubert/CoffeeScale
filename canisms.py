@@ -36,12 +36,13 @@ def main(scale_id,eventType,recipient):
         print "Yes"
         return True
     else :
-            then = parser.parse(row[0])
-            if debug: print "last sms to "+recipient+" for "+scale_id+" was "+ str(round( (now - then ).total_seconds() / 60)) +" minutes ago"
+        return False
+        then = parser.parse(row[0])
+        if debug: print "last sms to "+recipient+" for "+scale_id+" was "+ str(round( (now - then ).total_seconds() / 60)) +" minutes ago"
 ### if the last tweet was more than one x ago:
-            if round( (now - then ).total_seconds() / 60) > 30:
-                print "Yes"
-                return True
+        if round( (now - then ).total_seconds() / 60) > 30:
+            print "Yes"
+            return True
     print "No"
     return False
 
