@@ -25,14 +25,11 @@ seems to REQUIRE an older version of pyusb on newer linux
 ````
 
  - PYUSB
- 
-https://github.com/walac/pyusb
-````bash
-wget https://github.com/walac/pyusb/archive/master.zip
-unzip master.zip
- cd pyusb-master/
-./setup.py install
-````
+ --
+ used for python to access the USB devices
+installed above to specific older version based on information from this page:
+https://github.com/arvydas/blinkstick-python/wiki/NotImplementedError-is_kernel_driver_active-on-some-Linux-systems
+
 sqlite setup
 --
 ````bash
