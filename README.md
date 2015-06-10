@@ -17,7 +17,10 @@ sudo apt-get upgrade
 apt-get -y remove festival apache2-mpm-prefork apache2-utils apache2.2-bin apache2.2-common libapache2-mod-php5
 apt-get -y install mpg123  php5-sqlite man espeak sqlite3 subversion git openssh-server ntp lighttpd libusb-1.0 mysql-server python python-mysqldb php5 php5-mysql phpmyadmin python-setuptools python-pip python-dateutil ssmtp mailutils
 pip install twython
-pip install pyusb
+
+seems to REQUIRE an older version of pyusb on newer linux
+ pip install pyusb==1.0.0b1
+
  pip install shutil
 ````
 
