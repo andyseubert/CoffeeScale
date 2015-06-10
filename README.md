@@ -38,7 +38,6 @@ sqlite3 c16
 CREATE TABLES 
 --
 ````SQL
-
 CREATE TABLE 'settings' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'setting_name' REAL NOT NULL, 'setting_value' REAL NOT NULL);
 CREATE TABLE 'readings' (
   'reading_time' datetime NOT NULL,
@@ -49,7 +48,15 @@ CREATE TABLE 'readings' (
 CREATE TABLE 'scales' (
   'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'scale_name' TEXT NOT NULL,'vendor_id' TEXT NOT NULL,'product_id' TEXT NOT NULL,'serialno' TEXT NOT NULL,'data_mode_grams' INTEGER NOT NULL,'data_mode_ounces' INTEGER NOT NULL
   );
-CREATE TABLE 'tweets' ('scale_id' INTEGER PRIMARY KEY NOT NULL, 'tweet_time' INTEGER NOT NULL, 'message' INTEGER NOT NULL, 'type' INTEGER NOT NULL default 'update');
+CREATE TABLE 'tweets' ('tweet_time' INTEGER NOT NULL, 'message' INTEGER NOT NULL, 'type' INTEGER NOT NULL default 'update', 'scale_id' INTEGER);
+CREATE TABLE 'texts' (
+  'sms_time' datetime NOT NULL,
+  'msg' TEXT NOT NULL,
+  'type' INTEGER NOT NULL,
+  'scale_id' INTEGER NOT NULL,
+  'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  'recipient' TEXT NOT NULL);
+
 ````
 
 Connect the Scale
@@ -104,6 +111,8 @@ add psmonitor.sh to the crontab - this will watch for the running monitorScale.p
 ````bash
 * * * * * /usr/local/CoffeeScale/psmonitor.sh
 ````
+
+
 
 Trouble
 --
